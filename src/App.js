@@ -6,9 +6,23 @@ import "./App.css";
 // Constants
 const TWITTER_HANDLE = "_buildspace";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+const TEST_TWEETS = [
+  "841418541026877441",
+  "1457408745244332034",
+  "1442173206799044609",
+  "1457156043612459009",
+  "1457096407169609729",
+  "841418541026877441",
+  "1457408745244332034",
+  "1442173206799044609",
+  "1457156043612459009",
+  "1457096407169609729",
+];
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [tweetList, setTweetList] = useState([]);
 
   /*
    * This function holds the logic for deciding if a Phantom Wallet is
@@ -52,6 +66,17 @@ const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (walletAddress) {
+      console.log("Fetching Tweet list...");
+
+      // Call Solana program here.
+
+      // Set state
+      setTweetList(TEST_TWEETS);
+    }
+  }, [walletAddress]);
+
   const connectWallet = async () => {
     const { solana } = window;
 
@@ -71,27 +96,31 @@ const App = () => {
     </button>
   );
 
-  const TEST_TWEETS = [
-    "841418541026877441",
-    "1457408745244332034",
-    "1442173206799044609",
-    "1457156043612459009",
-    "1457096407169609729",
-    "841418541026877441",
-    "1457408745244332034",
-    "1442173206799044609",
-    "1457156043612459009",
-    "1457096407169609729",
-  ];
+  const sendTweet = async () => {
+    if (inputValue.length > 0) {
+      console.log("Tweet link:", inputValue);
+    } else {
+      console.log("Empty input. Try again.");
+    }
+  };
 
   const renderConnectedContainer = () => (
-    // <div className="connected-container">
-    <div className="gif-grid">
-      {TEST_TWEETS.map((tweetId, i) => (
-        <Tweet key={i} tweetId={tweetId} options={{ width: "400" }} />
-      ))}
+    <div className="connected-container">
+      <input
+        type="text"
+        placeholder="Enter tweet link!"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button className="cta-button submit-gif-button" onClick={sendTweet}>
+        Submit
+      </button>
+      <div className="gif-grid">
+        {tweetList.map((tweetId, i) => (
+          <Tweet key={i} tweetId={tweetId} options={{ width: "400" }} />
+        ))}
+      </div>
     </div>
-    // </div>
   );
 
   return (
